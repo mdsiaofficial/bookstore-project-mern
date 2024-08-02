@@ -14,14 +14,24 @@ app.get("/", (req, res) => {
 // route for save a new book
 app.post("/books", async (req, res) => {
 
-  const { title, author, year } = req.body;
-
+  const { title, author, publishYear } = req.body;
+  console.log(title);
   try {
     if (!title && !author && !year) {
       return (
         res.status(400).send({ message: "All fields are required." })
-      )
-    }
+      );
+    };
+
+    const newBook = {
+      title,
+      author,
+      publishYear
+    };
+    console.log(newBook);
+    const book = await Book.create(newBook);
+    console.log(book);
+    
   } catch (error) {
     console.log(error);
     res.status(500).send({message:"Server Error"});
