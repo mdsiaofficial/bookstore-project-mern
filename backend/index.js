@@ -70,12 +70,46 @@ app.get("/books", async (req, res) => {
   }
 });
 
-// get 
+// get one book
 app.get("/books/:id", async (req, res) => {
-  const { id } = req.params;
+  
   try {
+    const { id } = req.params;
     const book = await Book.findById(id);
     return res.status(200).json(book);
+  } catch (error) {
+    console.error(error.message);
+    return res.status(500).send({ message: error.message });
+  }
+});
+
+// update one book
+app.put("/books/:id", async (req, res) => {
+  const { id } = req.params;
+  const { title, author, publishYear } = req.body;
+  try {
+    const book = await Book.findByIdAndUpdate(id, req.body);
+
+    if (!book) return res.status(404).json({ message: "Book not found." });
+
+    return res.status(200).json({ message: "book updated", data: book });
+    
+  } catch (error) {
+    console.error(error.message);
+    return res.status(500).send({ message: error.message });
+  }
+});
+
+// update one book
+app.delete("/books/:id", async (req, res) => {
+  const { id } = req.params;
+  try {
+    await Book.findOneAndDelete({ _id: id });
+
+    
+
+    return res.status(200).json({ message: "book deleted" });
+    
   } catch (error) {
     console.error(error.message);
     return res.status(500).send({ message: error.message });
