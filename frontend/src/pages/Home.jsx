@@ -4,12 +4,15 @@ import Spinner from '../components/Spinner'
 import { Link } from 'react-router-dom'
 // import { AiOutlineEdit } from 'react-icons/ai'
 import { BsInfoCircle } from 'react-icons/bs'
-import { MdOutlineDelete, MdOutlineAddBox} from 'react-icons/md'
+import { MdOutlineDelete, MdOutlineAddBox } from 'react-icons/md'
+import BooksTable from '../components/BooksTable'
+import BooksCard from '../components/BooksCard'
 
 const Home = () => {
 
   const [books, setBooks] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [showType, setShowType] = useState("table");
 
   useEffect(() => {
     setLoading(true);
@@ -24,65 +27,35 @@ const Home = () => {
         console.error(error);
         setLoading(false);
       })
-    
+
   }, []);
   return (
     <div className='p-4'>
+      <div className="flex justify-center items-center gap-x-4 text-white">
+        <button onClick={() => setShowType("table")} className='bg-blue-500 hover:bg-blue-700 p-3 rounded-xl'>Table</button>
+        <button onClick={() => setShowType("card")} className='bg-indigo-500 hover:bg-indigo-700  p-3 rounded-xl'>Card</button>
+      </div>
+
       <div className="flex justify-between items-center">
-
         <h1 className='text-3xl my-8'>Book List</h1>
-
         <Link to={`/books/create`}>
-          <MdOutlineAddBox className='text-sky-600 text-4xl'/>
+          <MdOutlineAddBox className='text-sky-600 text-4xl' />
         </Link>
       </div>
       {loading ? (
-        <Spinner/>
+        <Spinner />
       ) : (
+        showType === "table" ? (
           <div>
-            <table className='w-full border-separate border-spacing-2'>
-
-              <thead>
-                <tr>
-                  <th className='border border-slate-700 rounded-lg'>No</th>
-                  <th className='border border-slate-700 rounded-lg'>Title</th>
-                  <th className='border border-slate-700 rounded-lg max-md:hidden'>Author</th>
-                  <th className='border border-slate-700 rounded-lg max-md:hidden'>Publish Year</th>
-                  <th className='border border-slate-700 rounded-lg'>Operations</th>
-                </tr>
-              </thead>
-
-              <tbody>
-                {
-                  books.map((book, index) => (
-                    <tr key={book._id} className='h-8'>
-                      <td className='border border-slate-800 rounded-lg text-center'>{ index+1 }</td>
-                      <td className='border border-slate-800 rounded-lg text-center'>{ book.title }</td>
-                      <td className='border border-slate-800 rounded-lg text-center max-md:hidden'>{ book.author }</td>
-                      <td className='border border-slate-800 rounded-lg text-center max-md:hidden'>{ book.publishYear }</td>
-                      <td className='border border-slate-800 rounded-lg text-center'>
-                        <div className="flex justify-center gap-x-4">
-                          <Link to={`/books/details/${book._id}`}>
-                            <BsInfoCircle className='text-2xl text-green-600'/>
-                          </Link>
-                          <Link to={`/books/edit/${book._id}`}>
-                            <MdOutlineAddBox className='text-2xl text-yellow-600'/>
-                          </Link>
-                          <Link to={`/books/delete/${book._id}`}>
-                            <MdOutlineDelete className='text-2xl text-red-800'/>
-                          </Link>
-                        </div>
-                      </td>
-                    </tr>
-                  ))
-                }
-              </tbody>
-
-            </table>
+            <BooksTable books={books} />
+          </div>) : (
+          <div>
+            <BooksCard books={books} />
           </div>
+        )
       )
-    }
-      
+      }
+
     </div>
   )
 }
