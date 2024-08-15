@@ -17,6 +17,7 @@ const Home = () => {
       .get("http://localhost:5555/books")
       .then((res) => {
         setBooks(res.data.data);
+        console.log(res.data.data);
         setLoading(false);
       })
       .catch((error) => {
@@ -53,7 +54,7 @@ const Home = () => {
 
               <tbody>
                 {
-                  Array.isArray(books) && books.map((book, index) => (
+                  books.map((book, index) => (
                     <tr key={book._id} className='h-8'>
                       <td className='border border-slate-800 rounded-lg text-center'>{ index+1 }</td>
                       <td className='border border-slate-800 rounded-lg text-center'>{ book.title }</td>
